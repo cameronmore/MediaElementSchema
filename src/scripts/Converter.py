@@ -15,6 +15,23 @@ def Chicago_bib_author_block(item):
     author_string = author_string + ". "
     return author_string
 
+def Chicago_bib_translator_block(item):
+    """
+    Component of SerializeFromJSON that takes a JSON instance of a Media Element Schema and returns the Chicago style bibliographic entry portion of translators for a piece of media.
+    """
+    item=item
+    
+    translator_string= ""
+    if "translator" in item.keys():
+        translator_string = "Translated by " + str(item['translator']['firstName']) + " "  + str(item['translator']['lastName']) + ". "
+    if "translator2" in item.keys():
+        translator_string = "Translated by " + str(item['translator']['firstName']) + " "  + str(item['translator']['lastName']) + " and " +str(item['translator2']['firstName']) + " "  + str(item['translator2']['lastName']) + ". "
+    if "translator3" in item.keys():
+        translator_string = "Translated by " + str(item['translator']['firstName']) + " "  + str(item['translator']['lastName']) + ", " + str(item['translator2']['firstName']) + " "  + str(item['translator2']['lastName']) + ", and " + str(item['translator3']['firstName']) + " "  + str(item['translator3']['lastName']) + ". "
+        
+    return translator_string
+
+
 
 def SerializeFromJSON(input_file=str,style=str,skip_missing=bool,update_existing=bool):
     """
@@ -36,14 +53,12 @@ def SerializeFromJSON(input_file=str,style=str,skip_missing=bool,update_existing
         if style == "Chicago":
             if item['mediaType'] == "book":
                 
-                #Author Block
                 author_string = Chicago_bib_author_block(item)
                 
-                translator_string= ""
-                if "translator" in item.keys():
-                    translator_string = "Translated by " + str(item['translator']['firstName']) + " "  + str(item['translator']['lastName']) + ". "
+                translator_string= Chicago_bib_translator_block(item)
                 
-                title_string = str(item['title'] + ". ")     
+                title_string = str(item['title'] + ". ")
+                    
                 editor_string = ""
                 if "editor" in item.keys():
                     editor_string = "Edited by " + str(item['editor']['firstName']) + " "  + str(item['editor']['lastName']) + ". "
@@ -95,9 +110,7 @@ def SerializeFromJSON(input_file=str,style=str,skip_missing=bool,update_existing
                 #Author Block
                 author_string = Chicago_bib_author_block(item)
                 
-                translator_string= ""
-                if "translator" in item.keys():
-                    translator_string = "Translated by " + str(item['translator']['firstName']) + " "  + str(item['translator']['lastName']) + ". "
+                translator_string= Chicago_bib_translator_block(item)
                 
                 title_string = '"' + str(item['title']) + '." '
                 
