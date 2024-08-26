@@ -31,7 +31,21 @@ def Chicago_bib_translator_block(item):
         
     return translator_string
 
-
+def Chicago_bib_editor_block(item):
+    """
+    Component of SerializeFromJSON that takes a JSON instance of a Media Element Schema and returns the Chicago style bibliographic entry portion of editor for a piece of media.
+    """
+    item=item
+    
+    editor_string= ""
+    if "translator" in item.keys():
+        editor_string = "Edited by " + str(item['editor']['firstName']) + " "  + str(item['editor']['lastName']) + ". "
+    if "translator2" in item.keys():
+        editor_string = "Edited by " + str(item['editor']['firstName']) + " "  + str(item['editor']['lastName']) + " and " +str(item['editor2']['firstName']) + " "  + str(item['editor2']['lastName']) + ". "
+    if "translator3" in item.keys():
+        editor_string = "Edited by " + str(item['editor']['firstName']) + " "  + str(item['editor']['lastName']) + ", " + str(item['editor2']['firstName']) + " "  + str(item['editor2']['lastName']) + ", and " + str(item['editor3']['firstName']) + " "  + str(item['editor3']['lastName']) + ". "
+        
+    return editor_string
 
 def SerializeFromJSON(input_file=str,style=str,skip_missing=bool,update_existing=bool):
     """
@@ -59,10 +73,8 @@ def SerializeFromJSON(input_file=str,style=str,skip_missing=bool,update_existing
                 
                 title_string = str(item['title'] + ". ")
                     
-                editor_string = ""
-                if "editor" in item.keys():
-                    editor_string = "Edited by " + str(item['editor']['firstName']) + " "  + str(item['editor']['lastName']) + ". "
-                    
+                editor_string = Chicago_bib_editor_block(item)
+
                 publisher_string = str(item['publisher']['location']) + ": " + str(item['publisher']['publisherName']) + ", " + str(item['time']['year']) + ". "
                 
                 citation_string = author_string +  title_string + translator_string + editor_string +publisher_string
@@ -147,15 +159,13 @@ def SerializeFromJSON(input_file=str,style=str,skip_missing=bool,update_existing
                         time_string = str(item['time']['year'] + ". ")
                     if "day" in item['time'].keys():
                         time_string = str(item['time']['month'] + " " + item['time']['day'] + ", " + item['time']['year'] + ". ")
-                            
+                        
                 title_string = '"' + str(item['title']) + '." '
                 publisher_string = str(item['publisher']['publisherName']) + ". "
                 url_string = str(item['url']) + "."
                 citation_string = author_string  + title_string + publisher_string + time_string + accessed_string + url_string
                 print(citation_string)
-                
-                            
-                pass
+
                 
             if item['mediaType'] == "film":
                 
