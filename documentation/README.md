@@ -14,6 +14,8 @@ Instead, I crafted my own schema.
 ## The Schema and Script
 To use the script in`scripts/Converter.py`:
 ```python
+import json
+
 SerializeFromJSON("YOUR_JSON.json","MLA")
 ```
 This will read a JSON file looking for the "mediaData" as the main key of `YOUR_JSON.json` and print the results. There is other _planned_ functionality for the script that is described in the function notes, but it does not work. (For example, it does not properly italicize anything).
