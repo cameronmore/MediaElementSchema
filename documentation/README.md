@@ -3,11 +3,22 @@
 ## Background
 The Meda Element Schema was created out of the need to (1) automatically convert bibliographic citations into multiple formats (2) in a lightweight package. Although great tools like Zotero exist, something more minimal was desired.
 
-The schema itself was developed initially as a way to represent the input to a function which generated the citation. Roderic Page has documented several competing representations of bibliographic entries in JSON [here](https://github.com/rdmpage/bibliographic-metadata-json?tab=readme-ov-file), which include BibJSON, CLS-JSON, and JSON-LD. At first, BibJSON seemed promising, but some of the keys seemed unintuative--and more importantly, the project is inactive. Moreover, many of these options did not preserve the ability to clearly distinguish author one and author two, or the components of an author's name (which are written differnetly depending on the media type and citation style). The other options had more drawbacks--a JSON-LD implementation seemed interesting, but having to deal with nested JSON-LD for no obvious benefit steered me away from that option.
+The schema itself was developed initially as a way to represent the input to a function which generated the citation. Roderic Page has documented several competing representations of bibliographic entries in JSON [here](https://github.com/rdmpage/bibliographic-metadata-json?tab=readme-ov-file), which include BibJSON, CLS-JSON, and JSON-LD.
+
+At first, BibJSON seemed promising, but some of the keys seemed unintuative--and more importantly, the project is inactive. Many of these options did not preserve the ability to clearly distinguish author one and author two, or the components of an author's name (which are written differnetly depending on the media type and citation style), and combined data that I thought should be kept separately (like first and last page numbers for a piece of text).
+
+A JSON-LD implementation seemed interesting at first, but having to deal with nested JSON-LD for no obvious, immediate benefit steered me away from that option.
 
 Instead, I crafted my own schema.
 
-## The Schema
+## The Schema and Script
+To use the script in`scripts/Converter.py`:
+```python
+SerializeFromJSON("YOUR_JSON.json","MLA")
+```
+This will read a JSON file looking for the "mediaData" as the main key of `YOUR_JSON.json` and print the results. There is other _planned_ functionality for the script that is described in the function notes, but it does not work. (For example, it does not properly italicize anything).
+
+The schema itself is written in [JSON Schema](https://json-schema.org/) and heavily inspired by BibJSON, RIS, and BibTeX, with keys for publisher information, authors, editors, translators, and the length of a piece of media (time in video/audio media, page numbers in print).
 
 
 ## Media Element Schema Ecosystem
