@@ -102,6 +102,18 @@ def MLA_bib_editor_block(item):
         
     return editor_string
 
+def PageLength(item):
+    """
+    Component of SerializeFromJSON() to grab the page numbers for a text.
+    """
+    item=item
+    page_string = str(item['length']['firstPage']) + "-" + str(item['length']['lastPage'])
+    if str(item['length']['firstPage']) == str(item['length']['lastPage']):
+        page_string = str(item['length']['firstPage'])
+    
+    return page_string
+    pass
+
 def SerializeFromJSON(input_file=str,style=str,skip_missing=bool,update_existing=bool):
     """
     This function is designed to take a JSON Media Element type object as an input and produce bibliographic citations in a standard format \n
@@ -335,6 +347,24 @@ def SerializeFromJSON(input_file=str,style=str,skip_missing=bool,update_existing
                 publisher_string = str(item['publisher']['publisherName']) + ", " + str(item['time']['year'])
                 
                 citation_string = author_string + title_string + translator_string + editor_string + publisher_string
+                print(citation_string)
+            
+            if item['mediaType'] == "article":
+                
+                author_string = MLA_bib_author_block(item)
+                
+                title_string = '"' + str(item['title']) + '." '
+                
+                page_string = PageLength(item)
+                
+                journal_string = ""
+                if "journal" in item.keys():
+                    journal_string = str(item['journal']['journalName']) + ", vol. " + str(item['journal']['volume']) + ", no. " + str(item['journal']['issue']) + ", pp. "
+                    if "time" in item.keys():
+                        if "year" in item['time']:
+                            journal_string = str(item['journal']['journalName']) + ", vol. " + str(item['journal']['volume']) + ", no. " + str(item['journal']['issue']) + ", " + str(item['time']['year']) + ", pp. "
+                
+                citation_string = author_string + title_string + journal_string + page_string + ". "
                 print(citation_string)
                 
                 
