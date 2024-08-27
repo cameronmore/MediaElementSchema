@@ -31,6 +31,7 @@ def Chicago_bib_translator_block(item):
         
     return translator_string
 
+
 def Chicago_bib_editor_block(item):
     """
     Component of SerializeFromJSON that takes a JSON instance of a Media Element Schema and returns the Chicago style bibliographic entry portion of editor for a piece of media.
@@ -38,12 +39,66 @@ def Chicago_bib_editor_block(item):
     item=item
     
     editor_string= ""
-    if "translator" in item.keys():
+    if "editor" in item.keys():
         editor_string = "Edited by " + str(item['editor']['firstName']) + " "  + str(item['editor']['lastName']) + ". "
-    if "translator2" in item.keys():
+    if "editor2" in item.keys():
         editor_string = "Edited by " + str(item['editor']['firstName']) + " "  + str(item['editor']['lastName']) + " and " +str(item['editor2']['firstName']) + " "  + str(item['editor2']['lastName']) + ". "
-    if "translator3" in item.keys():
+    if "editor3" in item.keys():
         editor_string = "Edited by " + str(item['editor']['firstName']) + " "  + str(item['editor']['lastName']) + ", " + str(item['editor2']['firstName']) + " "  + str(item['editor2']['lastName']) + ", and " + str(item['editor3']['firstName']) + " "  + str(item['editor3']['lastName']) + ". "
+        
+    return editor_string
+
+def MLA_bib_author_block(item):
+    """
+    Component of SerializeFromJSON for authors in MLA.
+    """
+    item=item
+    author_string = str(item['author']['lastName']) + ", " + str(item['author']['firstName']) + ". "
+    if "author2" in item.keys():
+        author_string = str(item['author']['lastName']) + ", " + str(item['author']['firstName']) + " and " + str(item['author2']['firstName']) + " " + str(item['author2']['lastName'])
+        if "author3" in item.keys():
+            author_string = str(item['author']['lastName']) + ", et al. "
+    
+    return author_string
+
+def MLA_bib_translator_block(item):
+    """
+    Component of SerializeFromJSON that takes a JSON instance of a Media Element Schema and returns the Chicago style bibliographic entry portion of translators for a piece of media.
+    """
+    item=item
+    
+    translator_string= ""
+    end = ""
+    if "editor" in item.keys():
+        end = ", "
+    if "translator" in item.keys():
+        translator_string = "Translated by " + str(item['translator']['firstName']) + " "  + str(item['translator']['lastName']) + end
+    if "translator2" in item.keys():
+        translator_string = "Translated by " + str(item['translator']['firstName']) + " "  + str(item['translator']['lastName']) + " and " +str(item['translator2']['firstName']) + " "  + str(item['translator2']['lastName']) + end
+    if "translator3" in item.keys():
+        translator_string = "Translated by " + str(item['translator']['firstName']) + " "  + str(item['translator']['lastName']) + ", " + str(item['translator2']['firstName']) + " "  + str(item['translator2']['lastName']) + ", and " + str(item['translator3']['firstName']) + " "  + str(item['translator3']['lastName']) + end
+        
+    return translator_string  
+
+
+def MLA_bib_editor_block(item):
+    """
+    Component of SerializeFromJSON that takes a JSON instance of a Media Element Schema and returns the Chicago style bibliographic entry portion of editor for a piece of media.
+    """
+    item=item
+    
+    editor_string= ""
+    beginning="Edited by "
+    if "editor" in item.keys():
+        beginning="edited by "
+    if "translator" in item.keys():
+        end="."
+    if "editor" in item.keys():
+        editor_string = beginning + str(item['editor']['firstName']) + " "  + str(item['editor']['lastName']) + ". "
+    if "editor2" in item.keys():
+        editor_string = beginning + str(item['editor']['firstName']) + " "  + str(item['editor']['lastName']) + " and " +str(item['editor2']['firstName']) + " "  + str(item['editor2']['lastName']) + ". "
+    if "editor3" in item.keys():
+        editor_string = beginning + str(item['editor']['firstName']) + " "  + str(item['editor']['lastName']) + ", " + str(item['editor2']['firstName']) + " "  + str(item['editor2']['lastName']) + ", and " + str(item['editor3']['firstName']) + " "  + str(item['editor3']['lastName']) + ". "
         
     return editor_string
 
@@ -200,16 +255,11 @@ def SerializeFromJSON(input_file=str,style=str,skip_missing=bool,update_existing
         
         # MLA style
         if style == "MLA":
-
-                
+            
             if item['mediaType'] == "chapter in book":
                 
                 # MLA Author block
-                author_string = str(item['author']['lastName']) + ", " + str(item['author']['firstName']) + ". "
-                if "author2" in item.keys():
-                    author_string = str(item['author']['lastName']) + ", " + str(item['author']['firstName']) + " and " + str(item['author2']['firstName']) + " " + str(item['author2']['lastName'])
-                    if "author3" in item.keys():
-                        author_string = str(item['author']['lastName']) + ", et al. "
+                author_string = MLA_bib_author_block(item)
                 
                 title_string = str('"' + item['title'] +  '." ' )
                 
@@ -245,6 +295,7 @@ def SerializeFromJSON(input_file=str,style=str,skip_missing=bool,update_existing
                 publisher_string = str(item['publisher']['publisherName']) + ", "
                 accessed_string = " Accessed at " + str(item['accessDate']) + ". "
                 url_string = str(item['url']) + "."
+                
                 citation_string =  title_string + publisher_string + time_string + url_string + accessed_string
                 print(citation_string)
 
@@ -271,7 +322,24 @@ def SerializeFromJSON(input_file=str,style=str,skip_missing=bool,update_existing
                 print(citation_string)
                 pass
             
+            if item['mediaType'] == "book":
+                
+                author_string = MLA_bib_author_block(item)
+                
+                title_string =  str(item['title']) + '. '
+                
+                translator_string = MLA_bib_translator_block(item)
+                
+                editor_string = MLA_bib_editor_block(item)
+                
+                publisher_string = str(item['publisher']['publisherName']) + ", " + str(item['time']['year'])
+                
+                citation_string = author_string + title_string + translator_string + editor_string + publisher_string
+                print(citation_string)
+                
+                
+            
 
-SerializeFromJSON("src/schema/SampleData.json","Chicago")
+SerializeFromJSON("src/schema/SampleData.json","MLA")
 
 
