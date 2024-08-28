@@ -138,7 +138,7 @@ def SerializeFromJSON(input_file=str,style=str,skip_missing=bool,update_existing
     The skip_missing boolean will skip required elements for media citations if False, but throw an error if True or None. \n
     The update_existing flag will update the existing JSON file with the citations in-line and not produce a new output. \n
     Valid media types include: book, book with only editors, article, chapter in book, film, webpage with author, webpage without author. \n
-    The script can handle Chicago format for: 'book', 'film', 'article', 'webpage without author', 'webpage with author', and 'chapter in book'. And MLA for 'chapter in book', 'webpage with author', and 'webpage without author'\n
+    The script can handle Chicago format for: 'book', 'film', 'article', 'webpage without author', 'webpage with author', and 'chapter in book'. And MLA for 'book', 'chapter in book', 'film', 'webpage with author', and 'webpage without author'\n
     Limitations: handles only up to three editors and authors, less translators, a small amount of source types, and only Chicago style.
     """
     with open(input_file) as f:
