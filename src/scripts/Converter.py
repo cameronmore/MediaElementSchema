@@ -102,6 +102,23 @@ def MLA_bib_editor_block(item):
         
     return editor_string
 
+def MLA_bib_director_block(item):
+    """
+    Component of SerializeFromJSON that takes a JSON instance of a Media Element Schema and returns the Chicago style bibliographic entry portion of editor for a piece of media.
+    """
+    item=item
+    
+    editor_string= ""
+    beginning="Directed by "
+    if "author" in item.keys():
+        editor_string = beginning + str(item['author']['firstName']) + " "  + str(item['author']['lastName']) + ", "
+    if "author2" in item.keys():
+        editor_string = beginning + str(item['author']['firstName']) + " "  + str(item['author']['lastName']) + " and " +str(item['author2']['firstName']) + " "  + str(item['author2']['lastName']) + ", "
+    if "author3" in item.keys():
+        director_string = beginning + str(item['author']['firstName']) + " "  + str(item['author']['lastName']) + ", " + str(item['author2']['firstName']) + " "  + str(item['author2']['lastName']) + ", and " + str(item['author3']['firstName']) + " "  + str(item['author3']['lastName']) + ", "
+        
+    return director_string
+
 def PageLength(item):
     """
     Component of SerializeFromJSON() to grab the page numbers for a text.
@@ -366,7 +383,15 @@ def SerializeFromJSON(input_file=str,style=str,skip_missing=bool,update_existing
                 
                 citation_string = author_string + title_string + journal_string + page_string + ". "
                 print(citation_string)
+            
+            if item['mediaType'] == "film":
+                title_string = str(item['title']) + '. '
+                author_string = "Directed by " + str(MLA_bib_director_block(item))
+                publisher_string = str(item['publisher']['publisherName'] + ", " + item['time']['year'] + ". ")
                 
+                citation_string = title_string + author_string + publisher_string
+                
+                print(citation_string)
                 
             
 
